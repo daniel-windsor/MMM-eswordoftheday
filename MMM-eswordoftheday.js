@@ -30,17 +30,19 @@ Module.register("MMM-eswordoftheday", {
   },
 
   getDom: function() {
-    console.log(this.apiData)
 		const wrapper = document.createElement("div");
 
     if (this.apiData) {
       const word = document.createElement('div')
       word.innerHTML = this.apiData.word
+      word.className = "bold large"
 
       const translation = document.createElement('div')
       translation.innerHTML = this.apiData.translation
 
       const list = document.createElement('ol')
+      list.className = "small"
+
       for (const key in this.apiData.examples) {
         const listItem = document.createElement('li')
 
@@ -61,5 +63,5 @@ Module.register("MMM-eswordoftheday", {
     }
 
     return wrapper
-  }
+  },
 })
