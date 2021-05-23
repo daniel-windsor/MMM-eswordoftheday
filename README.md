@@ -9,7 +9,12 @@ It presents a spanish word with an english definition, as well as two spanish/en
 
 
 ## Installation
-Open a terminal session, navigate to your MagicMirror's `modules` folder and execute `git clone https://github.com/daniel-windsor/MMM-eswordoftheday.git`, a new folder called MMM-eswordoftheday will be created.
+Open a terminal session, navigate to your MagicMirror's `modules` folder and execute:
+````
+git clone https://github.com/daniel-windsor/MMM-eswordoftheday.git
+cd MMM-eswordoftheday
+npm install
+````
 
 Activate the module by adding it to the config.js file as shown below.
 
