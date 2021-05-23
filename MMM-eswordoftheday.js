@@ -2,6 +2,8 @@ Module.register("MMM-eswordoftheday", {
   defaults: {
     updateInterval: 86400000,
     retryDelay: 5000,
+    showExamples: true,
+    showExampleTranslations: true
   },
 
   start: function() {
@@ -36,30 +38,36 @@ Module.register("MMM-eswordoftheday", {
       const word = document.createElement('div')
       word.innerHTML = this.apiData.word
       word.className = "bold large"
-
+      wrapper.appendChild(word)
+      
       const translation = document.createElement('div')
       translation.innerHTML = this.apiData.translation
-
-      const list = document.createElement('ol')
-      list.className = "small"
-
-      for (const key in this.apiData.examples) {
-        const listItem = document.createElement('li')
-
-        const es = document.createElement('div')
-        es.innerHTML = this.apiData.examples[key].spanish
-
-        const en = document.createElement('div')
-        en.innerHTML = this.apiData.examples[key].english
-
-        listItem.appendChild(es)
-        listItem.appendChild(en)
-        list.appendChild(listItem)
-      }
-      
-      wrapper.appendChild(word)
       wrapper.appendChild(translation)
-      wrapper.appendChild(list)
+
+      if (this.config.showExamples) {
+        const list = document.createElement('ol')
+        list.className = "small"
+  
+        for (const key in this.apiData.examples) {
+          const listItem = document.createElement('li')
+  
+          const es = document.createElement('div')
+          es.innerHTML = this.apiData.examples[key].spanish
+          listItem.appendChild(es)
+
+          if (this.config.showExampleTranslations) {
+            const en = document.createElement('div')
+            en.innerHTML = this.apiData.examples[key].english
+            listItem.appendChild(en)
+          }
+  
+          list.appendChild(listItem)
+        }
+
+        wrapper.appendChild(list)
+      }
+    } else {
+      wrapper.innerHTML = "Loading..."
     }
 
     return wrapper
