@@ -21,3 +21,12 @@ modules: [
   position: 'bottom_left',
 }
 ````
+
+## Config
+The entry in `config.js` can include the following options:
+
+|Option|Description|Default Value|Accepted Values|
+|---|---|---|---|
+|`showExamples`|Toggle examples of the word being used in a sentence|true|`true / false`|
+|`showExampleTranslations`|If examples are shown, also show their english translations|true|`true / false`|
+
