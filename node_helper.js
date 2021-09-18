@@ -9,8 +9,8 @@ module.exports = NodeHelper.create({
 
       axios.get(url).then(({ data }) => {
         const $ = cheerio.load(data);
-  
-        const container = $(".entry--1qTEOKKt")[0];
+
+        const container = $("._1qTEOKKt")[0];
 
         const word = $(container).find("h3");
         const translation = word.next();
