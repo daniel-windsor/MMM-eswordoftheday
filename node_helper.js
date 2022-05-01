@@ -10,23 +10,23 @@ module.exports = NodeHelper.create({
       axios.get(url).then(({ data }) => {
         const $ = cheerio.load(data);
   
-        const container = $(".entry--1qTEOKKt")[0];
+        const container = $(".gl1Y0YQP")[0];
+        const container1 = $(".xiQBRZra")[0];
+        const container2 = $(".KkXPxEB8")[0];
 
         const word = $(container).find("h3");
         const translation = word.next();
 
-        const exampleContainer = $(container).find('ol').first().children()
-        const firstExample = exampleContainer.first().children()
-        const secondExample = exampleContainer.next().children()
+        const firstExampleText = $(container1);
+        const firstExample = firstExampleText.text();
+
+        const TranslationText = $(container2);
+        const translationExample = TranslationText.text();
 
         const examples = {
           one: {
-            spanish: firstExample.first().text(),
-            english: firstExample.next().text()
-          },
-          two: {
-            spanish: secondExample.first().text(),
-            english: secondExample.next().text()
+            spanish: firstExample,
+            english: translationExample
           }
         }
   
