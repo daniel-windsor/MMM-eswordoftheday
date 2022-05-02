@@ -10,33 +10,37 @@ module.exports = NodeHelper.create({
       axios.get(url).then(({ data }) => {
         const $ = cheerio.load(data);
   
-        const container = $(".gl1Y0YQP")[0];
-        const container1 = $(".xiQBRZra")[0];
-        const container2 = $(".KkXPxEB8")[0];
+        const container = $(".gl1Y0YQP");
 
-        const word = $(container).find("h3");
-        const translation = word.next();
+        const translationData = [];
 
-        const firstExampleText = $(container1);
-        const firstExample = firstExampleText.text();
+        for(let i = 0; i < containers.length; i++) {
+          const currentContainer = container[i];
+          const container1 = $(".xiQBRZra")[i];
+          const container2 = $(".KkXPxEB8")[i];
 
-        const TranslationText = $(container2);
-        const translationExample = TranslationText.text();
+          // Get Spanish Word
+          const word = $(currentContainer).find("h3");
+          // Get English Translation
+          const translation = word.next();
+          
+          // Get Spanish Examples
+          const spanishExample = $(container1);
 
-        const examples = {
-          one: {
-            spanish: firstExample,
-            english: translationExample
-          }
+          // Get English Translation
+          const englishExample = $(container2);
+
+          translationData.push({
+            "word": word.text(),
+            "translation": translation.text(),
+            "examples": {
+              "spanish": spanishExample.text(),
+              "english": englishExample.text()
+            }
+          })
         }
-  
-        const processed = { 
-          word: word.text(),
-          translation: translation.text(),
-          examples: examples
-        }
-
-        this.sendSocketNotification("MMM-eswordoftheday-RETURN_WORD", processed)
+        // Send Data
+        this.sendSocketNotification("MMM-eswordoftheday-RETURN_WORD", translationData)
       })
     }
   }
