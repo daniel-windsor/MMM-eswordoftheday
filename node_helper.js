@@ -14,7 +14,7 @@ module.exports = NodeHelper.create({
 
         const translationData = [];
 
-        for(let i = 0; i < containers.length; i++) {
+        for(let i = 0; i < container.length; i++) {
           const currentContainer = container[i];
           const container1 = $(".xiQBRZra")[i];
           const container2 = $(".KkXPxEB8")[i];
