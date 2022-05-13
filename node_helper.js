@@ -10,33 +10,37 @@ module.exports = NodeHelper.create({
       axios.get(url).then(({ data }) => {
         const $ = cheerio.load(data);
   
-        const container = $(".entry--1qTEOKKt")[0];
+        const container = $(".gl1Y0YQP");
 
-        const word = $(container).find("h3");
-        const translation = word.next();
+        const translationData = [];
 
-        const exampleContainer = $(container).find('ol').first().children()
-        const firstExample = exampleContainer.first().children()
-        const secondExample = exampleContainer.next().children()
+        for(let i = 0; i < container.length; i++) {
+          const currentContainer = container[i];
+          const container1 = $(".xiQBRZra")[i];
+          const container2 = $(".KkXPxEB8")[i];
 
-        const examples = {
-          one: {
-            spanish: firstExample.first().text(),
-            english: firstExample.next().text()
-          },
-          two: {
-            spanish: secondExample.first().text(),
-            english: secondExample.next().text()
-          }
+          // Get Spanish Word
+          const word = $(currentContainer).find("h3");
+          // Get English Translation
+          const translation = word.next();
+          
+          // Get Spanish Examples
+          const spanishExample = $(container1);
+
+          // Get English Translation
+          const englishExample = $(container2);
+
+          translationData.push({
+            "word": word.text(),
+            "translation": translation.text(),
+            "examples": {
+              "spanish": spanishExample.text(),
+              "english": englishExample.text()
+            }
+          })
         }
-  
-        const processed = { 
-          word: word.text(),
-          translation: translation.text(),
-          examples: examples
-        }
-
-        this.sendSocketNotification("MMM-eswordoftheday-RETURN_WORD", processed)
+        // Send Data
+        this.sendSocketNotification("MMM-eswordoftheday-RETURN_WORD", translationData)
       })
     }
   }
