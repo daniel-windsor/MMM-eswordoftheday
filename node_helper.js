@@ -1,47 +1,38 @@
 const NodeHelper = require("node_helper")
-const axios = require('axios')
-const cheerio = require('cheerio')
+const axios = require("axios")
+const cheerio = require("cheerio")
 
 module.exports = NodeHelper.create({
-  socketNotificationReceived: function(notification, payload) {
+  socketNotificationReceived: function (notification, payload) {
     if (notification === "MMM-eswordoftheday-GET_WORD") {
-      const url = "https://www.spanishdict.com/wordoftheday";
+      const url = "https://www.spanishdict.com/wordoftheday"
 
       axios.get(url).then(({ data }) => {
-        const $ = cheerio.load(data);
-  
-        const container = $(".gl1Y0YQP");
+        const $ = cheerio.load(data)
 
-        const translationData = [];
+        const wotd = $("h3[class*='wotdHeadword--']").first().text()
 
-        for(let i = 0; i < container.length; i++) {
-          const currentContainer = container[i];
-          const container1 = $(".xiQBRZra")[i];
-          const container2 = $(".KkXPxEB8")[i];
+        const translation = $("div[class^=translation]").first().text()
 
-          // Get Spanish Word
-          const word = $(currentContainer).find("h3");
-          // Get English Translation
-          const translation = word.next();
-          
-          // Get Spanish Examples
-          const spanishExample = $(container1);
+        const spanishExample = $("div[class^=exampleSource]").first().text()
 
-          // Get English Translation
-          const englishExample = $(container2);
+        const englishExample = $("div[class^=exampleTranslation]")
+          .first()
+          .text()
 
-          translationData.push({
-            "word": word.text(),
-            "translation": translation.text(),
-            "examples": {
-              "spanish": spanishExample.text(),
-              "english": englishExample.text()
-            }
-          })
+        const translationData = {
+          word: wotd,
+          translation: translation,
+          spanishExample: spanishExample,
+          englishExample: englishExample,
         }
+
         // Send Data
-        this.sendSocketNotification("MMM-eswordoftheday-RETURN_WORD", translationData)
+        this.sendSocketNotification(
+          "MMM-eswordoftheday-RETURN_WORD",
+          translationData
+        )
       })
     }
-  }
+  },
 })
