@@ -10,15 +10,14 @@ module.exports = NodeHelper.create({
       axios.get(url).then(({ data }) => {
         const $ = cheerio.load(data)
 
-        const wotd = $("h3[class*='wotdHeadword--']").first().text()
+        const wotdContainer = $("h3").first()
+        const wotd = wotdContainer.text()
 
-        const translation = $("div[class^=translation]").first().text()
+        const translation = wotdContainer.next().text()
 
-        const spanishExample = $("div[class^=exampleSource]").first().text()
-
-        const englishExample = $("div[class^=exampleTranslation]")
-          .first()
-          .text()
+        const examples = $("li").first().children()
+        const spanishExample = examples.first("div").contents().first().text()
+        const englishExample = examples.last("div").contents().first().text()
 
         const translationData = {
           word: wotd,
