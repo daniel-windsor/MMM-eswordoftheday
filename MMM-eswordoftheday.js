@@ -1,6 +1,6 @@
 Module.register("MMM-eswordoftheday", {
   defaults: {
-    updateInterval: 86400000,
+    updateInterval: 6 * 60 * 60 * 1000, // 6 hours in milliseconds
     retryDelay: 5000,
     showExamples: true,
     showExampleTranslations: true,
@@ -8,14 +8,14 @@ Module.register("MMM-eswordoftheday", {
 
   start: function () {
     Log.info(`Starting module: ${this.name}`)
-
     this.apiData = null
 
-    this.sendSocketNotification("MMM-eswordoftheday-GET_WORD", null)
+    // Fetch initial data
+    this.sendSocketNotification("MMM-eswordoftheday-GET_WORD", {})
 
-    const self = this
-    setTimeout(function () {
-      self.sendSocketNotification("MMM-eswordoftheday-GET_WORD", null)
+    // Fetch every 6 hours (or custom interval)
+    setInterval(() => {
+      this.sendSocketNotification("MMM-eswordoftheday-GET_WORD", {})
     }, this.config.updateInterval)
   },
 
@@ -25,7 +25,7 @@ Module.register("MMM-eswordoftheday", {
 
   socketNotificationReceived: function (notification, payload) {
     if (notification === "MMM-eswordoftheday-RETURN_WORD") {
-      Log.info("recieved: ", payload)
+      Log.info("Received:", payload)
       this.apiData = payload
       this.updateDom()
     }
@@ -44,24 +44,23 @@ Module.register("MMM-eswordoftheday", {
       translation.innerHTML = this.apiData.translation
       wrapper.appendChild(translation)
 
-      if (this.config.showExamples) {
+      if (this.config.showExamples && this.apiData.spanishExample) {
         const list = document.createElement("ul")
         list.className = "small"
 
         const listItem = document.createElement("li")
 
         const es = document.createElement("div")
-        es.innerHTML = this.apiData.spanishExample
+        es.innerHTML = this.apiData.spanishExample || "."
         listItem.appendChild(es)
 
-        if (this.config.showExampleTranslations) {
+        if (this.config.showExampleTranslations && this.apiData.englishExample) {
           const en = document.createElement("div")
-          en.innerHTML = this.apiData.englishExample
+          en.innerHTML = this.apiData.englishExample || "."
           listItem.appendChild(en)
         }
 
         list.appendChild(listItem)
-
         wrapper.appendChild(list)
       }
     } else {

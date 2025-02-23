@@ -15,9 +15,14 @@ module.exports = NodeHelper.create({
 
         const translation = wotdContainer.next().text()
 
-        const examples = $("li").first().children()
-        const spanishExample = examples.first("div").contents().first().text()
-        const englishExample = examples.last("div").contents().first().text()
+        let spanishExample = ''
+        let englishExample = ''
+        const exampleContainer = $('.YRbPpWPt').first()
+
+        if (exampleContainer.length) {
+          spanishExample = exampleContainer.find('.jxXGMKma').text().trim()
+          englishExample = exampleContainer.find('.B8zBqhO4').text().trim().replace(/^.*—\s*/, '') // Remove "—" and preceding whitespace
+        }
 
         const translationData = {
           word: wotd,
@@ -26,11 +31,14 @@ module.exports = NodeHelper.create({
           englishExample: englishExample,
         }
 
-        // Send Data
+        console.log("Fetched data:", translationData)
+
         this.sendSocketNotification(
           "MMM-eswordoftheday-RETURN_WORD",
           translationData
         )
+      }).catch(error => {
+        console.error("Error fetching data:", error)
       })
     }
   },
